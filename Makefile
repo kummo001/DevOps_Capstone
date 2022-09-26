@@ -31,7 +31,7 @@ lint:
 all: install lint test
 
 run-app:
-	python3 app/app.py
+	FLASK_APP=app.py flask run
 	
 build-docker:
 	./build_docker.sh
