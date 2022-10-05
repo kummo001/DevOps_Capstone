@@ -43,10 +43,6 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
-      - run:
-          name: run lint
-          command: |
-            printenv
       - docker/check
       - docker/build:
           image: kummozz/kummo-flask-app
