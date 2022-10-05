@@ -81,3 +81,5 @@ workflows:
       - run-lint
       - build-and-push:
           requires: [run-lint]
+      - deploy-eks:
+          requires: [build-and-push]
