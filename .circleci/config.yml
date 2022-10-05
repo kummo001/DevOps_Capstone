@@ -46,7 +46,7 @@ jobs:
       - run:
           name: run lint
           command: |
-            cat $DOCKER_LOGIN
+            printenv
       - docker/check
       - docker/build:
           image: kummozz/kummo-flask-app
