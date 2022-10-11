@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kummo-flask-app-deployment
+  name: kummo-flask-app-deployment-2-0
 spec:
   replicas: 1
   selector:
@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: capstone
-        image: kummozz/kummo-flask-app:1.0
+        image: kummozz/kummo-flask-app:2.0
         ports:
         - containerPort: 80
