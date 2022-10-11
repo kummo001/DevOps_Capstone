@@ -98,7 +98,7 @@ jobs:
           show-kubectl-command: true
       - run:
           name: get deployment status
-          command: kubectl get svc kummo-flask-app-deployment    
+          command: kubectl get svc kummo-flask-app
 workflows:
   deployment:
     jobs:
