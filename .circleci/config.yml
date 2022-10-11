@@ -74,7 +74,7 @@ jobs:
           nodegroup-name: eks-capstone-nodes
           node-type: t3.medium
           nodes-min: 2
-          nodes-max: 3
+          nodes-max: 5
   deploy-application:
     docker:
       - image: "cimg/python:3.10"
