@@ -46,10 +46,10 @@ jobs:
       - docker/check
       - docker/build:
           image: kummozz/kummo-flask-app
-          tag: "1.0"
+          tag: "2.0"
       - docker/push:
           image: kummozz/kummo-flask-app
-          tag: "1.0"          
+          tag: "2.0"          
   deploy-eks:
     docker:
       - image: "cimg/python:3.10"
@@ -94,7 +94,7 @@ jobs:
           resource-name: deployment/kummo-flask-app-deployment
           show-kubectl-command: true
       - kubernetes/create-or-update-resource:
-          resource-file-path: ".circleci/files/service.yml"
+          resource-file-path: ".circleci/files/service-green.yml"
           show-kubectl-command: true
       - run:
           name: get deployment status
