@@ -56,25 +56,49 @@ jobs:
     steps:
       - checkout
       - aws-cli/setup
-      # - run:
-      #     name: Check cluster
-      #     command: |
-      #       VALIDATE=$(aws eks describe-cluster --name eks-capstone --query 'cluster.name')
-      #       echo "$VALIDATE" > ~/validate
-      #       if cat ~/validate | grep "eks-capstone"
-      #       then
-      #         echo "Cluster eks-capstone already exist. Skipping job"
-      #         circleci-agent step halt
-      #         exit 0
-      #       else
-      #         echo "Attempting to create the cluster eks-capstone"
-      #       fi
+      - run:
+          name: Check cluster
+          command: |
+            VALIDATE=$(aws eks describe-cluster --name eks-capstone --query 'cluster.name')
+            echo "$VALIDATE" > ~/validate
+            if cat ~/validate | grep "eks-capstone"
+            then
+              echo "Cluster eks-capstone already exist. Skipping job"
+              circleci-agent step halt
+              exit 0
+            else
+              echo "Attempting to create the cluster eks-capstone"
+            fi
       - aws-eks/create-cluster:
           cluster-name: eks-capstone
           nodegroup-name: eks-capstone-nodes
           node-type: t3.medium
           nodes-min: 2
           nodes-max: 3
+  deploy-application:
+    docker:
+      - image: "cimg/python:3.10"
+    steps:
+      - checkout
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: eks-capstone
+          install-kubectl: true
+      - run:
+          name: Test kubectl
+          command: |
+            kubectl get services
+            kubectl get nodes
+      - kubernetes/create-or-update-resource:
+          get-rollout-status: true
+          resource-file-path: ".circleci/files/deployment.yml"
+          resource-name: deployment/kummo-flask-app-deployment
+          show-kubectl-command: true
+      - kubernetes/create-or-update-resource:
+          resource-file-path: ".circleci/files/service.yml"
+          show-kubectl-command: true
+      - run:
+          name: get deployment status
+          command: kubectl get svc kummo-flask-app-deployment    
 workflows:
   deployment:
     jobs:
@@ -83,3 +107,5 @@ workflows:
           requires: [run-lint]
       - deploy-eks:
           requires: [build-and-push]
+      - deploy-application:
+          requires: [deploy-eks]
